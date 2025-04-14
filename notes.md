@@ -67,3 +67,60 @@ we added an outlet below navabr. it says that any children route of the body wil
 
 advantage if this thing by this navbar will remain consistent and all the rest of ccode will come below navbar.
 you can create a footer compoent below outlet which will always remain there constant.
+-- inside create login.jsx create ui for login page.
+-- then create a state.
+
+
+ 
+ Understand below concepts:
+
+ onChange={(e)=>setEmailId(e.target.value)}
+//state variables
+  const [emailId , setEmailId] = useState();
+  const [password , setPassword] = useState();
+
+onchange func basically changes value of your text when you input.
+
+HANDLE LOGIN API CALL.
+  const handleLogin =async ()=>{
+    
+    try{
+    const res = await axios.post("http://localhost:7777/login",{
+      emailId,
+      password,
+    });}
+    catch(err){
+      console.error(err);
+    }
+  };
+  this is a fucntion that will make an api call to login function.
+  for that we will use an npm package called axios.
+  you can also use fetch.
+  you can use any library.
+
+CORS ERROR:it arises when you try to send an api call from one domain to another domain like from http://localhost:5173/login to http://localhost:7777/login.
+if your api are not of same domain such errors will be thrown and this error arises at browser level.
+
+so even if you change your ip to localhost for both you will get the error. so even port number matters.
+
+you will use an imp package over here in backend code 
+you'll use express cors package. use it as a middleware. 
+like this in app.js:
+const cors = require("cors");
+
+app.use(cors());
+before that do npm i cors
+
+by this you can now login from ui.
+
+now if you go to application and check if token is set in cookies you will find that it isn't. this is because axios doesnt allow tokens to be visible in unsecured browser.
+app.use(cors({
+  // whitelisting the domain name
+    origin: "http://localhost:5173",
+    credentials:true,
+}));
+here 
+
+you also have to set credentials in your frontend as well.
+after doing both you will see your token in cookies.
+so now the token is set in cookies.

@@ -20,4 +20,7 @@ Body
 - create BrowseRouter->Routes->Route=/body->RouteChildren
 - Create an outlet in your Body Component.
 - Create a footer
-
+- Create a login
+- Install axios
+- Instll CORS in backend=> add middleware with configurations: origin , credentials:true
+- pass  axios->{withCedentials=true} in frontend whenever making an api call. (if you dont do this it will not pass token in cookie);
