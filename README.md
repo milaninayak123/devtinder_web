@@ -24,3 +24,8 @@ Body
 - Install axios
 - Instll CORS in backend=> add middleware with configurations: origin , credentials:true
 - pass  axios->{withCedentials=true} in frontend whenever making an api call. (if you dont do this it will not pass token in cookie);
+- install react-redux + @reduxjs/toolkit => configureStore => Provider => createSlice => add reducer to store
+--add redux devtools extension in chrome
+-- login and see if your data is coming properly in store.
+-- navabr should update as soon as user logins
+-refactor code to add constants file + create a component folder.
