@@ -10,6 +10,7 @@
 - [CORS Configuration](#cors-configuration)
 - [State Management with Redux](#state-management-with-redux)
 - [Navigation](#navigation)
+- [Authentication and Route Protection](#authentication-and-route-protection)
 - [Best Practices](#best-practices)
 
 ## Setup and Configuration
@@ -202,6 +203,118 @@ const handleLogin = async () => {
 };
 ```
 
+## Authentication and Route Protection
+
+### Persistent Authentication
+
+One of the key features in a modern web application is maintaining the user's authentication state even after page refresh. This is implemented in the root component (`Body.jsx`) to ensure all routes are properly protected.
+
+#### Token-Based Authentication Flow
+
+When a user logs in:
+1. The server returns the user data and sets an authentication token in cookies
+2. The token is automatically included in subsequent API requests (using `withCredentials: true`)
+3. On page refresh, the application checks for the token and fetches the user profile
+
+#### Implementation in Body Component
+
+```jsx
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { addUser } from '../utils/userSlice';
+import { BASE_URL } from '../utils/constants';
+
+const Body = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userData = useSelector((store) => store.user);
+
+  const fetchUser = async () => {
+    // Skip API call if user data is already in Redux store
+    if (userData) return;
+    
+    try {
+      // Fetch the profile of the logged-in user
+      const res = await axios.get(BASE_URL + "/profile/view", {
+        withCredentials: true,
+      });
+      
+      // Update Redux store with user data
+      dispatch(addUser(res.data));
+    } catch (err) {
+      // If unauthorized (401), redirect to login page
+      if (err.response && err.response.status === 401) {
+        navigate("/login");
+      }
+      console.log(err);
+    }
+  };
+
+  // Call fetchUser when component mounts
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  return (
+    <div>
+      <NavBar />
+      <Outlet />
+    </div>
+  );
+};
+
+export default Body;
+```
+
+### Route Protection Mechanism
+
+This implementation provides several key features:
+
+1. **Automatic Authentication Check**: When the application loads, it automatically checks if the user is logged in by validating the token.
+
+2. **Redirect to Login**: If no valid token is found (resulting in a 401 Unauthorized error), the user is redirected to the login page.
+
+3. **Persistent Login**: If a valid token exists in cookies, the user remains logged in even after refreshing the page.
+
+4. **Redux Store Optimization**: By checking if user data already exists in the Redux store (`if (userData) return;`), we avoid unnecessary API calls.
+
+### Development Mode Considerations
+
+In React's development mode with StrictMode enabled (in `main.jsx`), the `useEffect` hook may run twice during initial render. This is a verification mechanism and not an issue with your code. This behavior only occurs in development mode, not in production.
+
+```jsx
+// In main.jsx, StrictMode causes double rendering in development
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+### Error Handling Best Practices
+
+When handling authentication errors, it's important to check the specific error status:
+
+```jsx
+catch (err) {
+  // Only redirect on authentication errors (401)
+  if (err.response && err.response.status === 401) {
+    navigate("/login");
+  }
+  console.log(err);
+}
+```
+
+### Summary
+
+This authentication flow ensures:
+- Users cannot access protected routes without logging in
+- Authentication state persists across page refreshes
+- The application efficiently manages user data by leveraging Redux
+- Error handling is appropriately implemented to handle different scenarios
+
 ## Best Practices
 
 ### Code Organization
@@ -218,122 +331,3 @@ export const BASE_URL = "http://localhost:7777";
 ### Remember JSX vs HTML
 - When working with React, always use JSX syntax, not HTML
 - Component names should be PascalCase (e.g., NavBar, not navbar)
-
-
-
-
-ep-17
-if not logged in you should be directed to login page.
-if loggedin should be redirected to feed page.
-when you refresh you should not be logged out.
-as soon as your body component loads in body.jsx check if token is present or not. if present then try to get the profile of the user.
-when a user logins token is set. 
-so in your body as soon as page will load fetch the profile of user using a fucntion.
-when you refresh , your store refreshes but you shouldnt get loggedout.
-how to build that feature?
-go to body. the root of your app.
-so in your body as soon as page will load as you are logged in it will get you the profile of user.
-
-const Body = () => {
-  const dispatch = useDispatch();
-  //this will fetch the profile of user
-  const fetchUser = async () => {
-    //update the store
-    try{
-    const res = await axios.get
-    //you will make a profile api call
-    //will give the info of loggedin user.
-    (BASE_URL + "/profile/view" , {
-      withCredentials: true,
-    });
-  }catch(err){
-    console.log(err);
-  }
-}
-
-after fetching update your store with res.data and do that using dispatch hook the dispatch an action.
-below is how it will be done:
-BELOW IS HOW TO MAKE SURE WE DONT LOG OUT IF REFRESH THE PAGE:
-ALSO USING THE BELOW CODE WE CAN MAKE SURE THAT WITHOUT LOGGING IN WE CANNOT ACCESS THE / OR HOME PAGE. IT WILL REDIRECT US TO LOGIN PAGE IF WE TRY TO DO THAT.
-import {addUser} from "../utils/userSlice"
-const Body = () => {
-  const dispatch = useDispatch();
-  const fetchUser = async () => {
-    //update the store
-    try{
-    //you will make a profile api call
-    //will give the info of loggedin user.
-    const res = await axios.get(BASE_URL + "/profile/view" , {
-      withCredentials: true,
-    });
-    dispatch(addUser(res.data));
-  }catch(err){
-    console.log(err);
-  }
-};
-
-
-useeffect: when my component loads whatever you write inside this will happen in the first load of the component.
-after the component is loaded this useeffect is called.
-e.g:
-useEffect(()=>{
-  fetchUser();
-} , []);
-over here we will fetch the user as soon as the component loads.
-
-//as you login and are in the feed page and as soon as page / component is loaded 2 api calls are made.
-2 times we are in "Strict" mode in dev.
-if you remove that from main.jsx .
-2 times is to reverify if the render is working well. 
-
-so after above code if you refreshyou will not log out.
-
-note: error 401 means unauthorized error.
-so only when you get this error i.e not logged in redirect to login page for other errors dont.
-}catch(err){
-    if(err.status==401){
-      navigate("/login");
-    }
-    navigate("/login");
-    console.log(err);
-  }
-
-so you cannot access any page unless you are loggedin.
-and the login is wrtten inside body.jsx:
-const Body = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const fetchUser = async () => {
-    //update the store
-    try{
-    //you will make a profile api call
-    //will give the info of loggedin user.
-    const res = await axios.get(BASE_URL + "/profile" , {
-      withCredentials: true,
-    });
-    dispatch(addUser(res.data));
-  }catch(err){
-    if(err.status==401){
-      navigate("/login");
-    }
-    console.log(err);
-  }
-};
-IMP:
-so as soon as my applixation starts it will check if token is valid it logs you in. else it redirects you to login page.
-
-once you have data in redux you dont want to make api call again and agin.
-to do that check the store in your body.
-
-  const userData = useSelector((store) => store.user);
-  get the user data.
-  if user data is not present then only make the api call.
-  const fetchUser = async () => {
-    //update the store
-    if(userData) return;
-    try{
-
-so summary:
--- you should not be able to access other routes without login.
--- it token is not present redirect user to login page.
