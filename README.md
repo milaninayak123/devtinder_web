@@ -29,3 +29,7 @@ Body
 -- login and see if your data is coming properly in store.
 -- navabr should update as soon as user logins
 -refactor code to add constants file + create a component folder.
+-- you should not be able to access other routes without login.
+-- it token is not present redirect user to login page.
+-- logout
+-- profile

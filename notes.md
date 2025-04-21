@@ -218,3 +218,122 @@ export const BASE_URL = "http://localhost:7777";
 ### Remember JSX vs HTML
 - When working with React, always use JSX syntax, not HTML
 - Component names should be PascalCase (e.g., NavBar, not navbar)
+
+
+
+
+ep-17
+if not logged in you should be directed to login page.
+if loggedin should be redirected to feed page.
+when you refresh you should not be logged out.
+as soon as your body component loads in body.jsx check if token is present or not. if present then try to get the profile of the user.
+when a user logins token is set. 
+so in your body as soon as page will load fetch the profile of user using a fucntion.
+when you refresh , your store refreshes but you shouldnt get loggedout.
+how to build that feature?
+go to body. the root of your app.
+so in your body as soon as page will load as you are logged in it will get you the profile of user.
+
+const Body = () => {
+  const dispatch = useDispatch();
+  //this will fetch the profile of user
+  const fetchUser = async () => {
+    //update the store
+    try{
+    const res = await axios.get
+    //you will make a profile api call
+    //will give the info of loggedin user.
+    (BASE_URL + "/profile/view" , {
+      withCredentials: true,
+    });
+  }catch(err){
+    console.log(err);
+  }
+}
+
+after fetching update your store with res.data and do that using dispatch hook the dispatch an action.
+below is how it will be done:
+BELOW IS HOW TO MAKE SURE WE DONT LOG OUT IF REFRESH THE PAGE:
+ALSO USING THE BELOW CODE WE CAN MAKE SURE THAT WITHOUT LOGGING IN WE CANNOT ACCESS THE / OR HOME PAGE. IT WILL REDIRECT US TO LOGIN PAGE IF WE TRY TO DO THAT.
+import {addUser} from "../utils/userSlice"
+const Body = () => {
+  const dispatch = useDispatch();
+  const fetchUser = async () => {
+    //update the store
+    try{
+    //you will make a profile api call
+    //will give the info of loggedin user.
+    const res = await axios.get(BASE_URL + "/profile/view" , {
+      withCredentials: true,
+    });
+    dispatch(addUser(res.data));
+  }catch(err){
+    console.log(err);
+  }
+};
+
+
+useeffect: when my component loads whatever you write inside this will happen in the first load of the component.
+after the component is loaded this useeffect is called.
+e.g:
+useEffect(()=>{
+  fetchUser();
+} , []);
+over here we will fetch the user as soon as the component loads.
+
+//as you login and are in the feed page and as soon as page / component is loaded 2 api calls are made.
+2 times we are in "Strict" mode in dev.
+if you remove that from main.jsx .
+2 times is to reverify if the render is working well. 
+
+so after above code if you refreshyou will not log out.
+
+note: error 401 means unauthorized error.
+so only when you get this error i.e not logged in redirect to login page for other errors dont.
+}catch(err){
+    if(err.status==401){
+      navigate("/login");
+    }
+    navigate("/login");
+    console.log(err);
+  }
+
+so you cannot access any page unless you are loggedin.
+and the login is wrtten inside body.jsx:
+const Body = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const fetchUser = async () => {
+    //update the store
+    try{
+    //you will make a profile api call
+    //will give the info of loggedin user.
+    const res = await axios.get(BASE_URL + "/profile" , {
+      withCredentials: true,
+    });
+    dispatch(addUser(res.data));
+  }catch(err){
+    if(err.status==401){
+      navigate("/login");
+    }
+    console.log(err);
+  }
+};
+IMP:
+so as soon as my applixation starts it will check if token is valid it logs you in. else it redirects you to login page.
+
+once you have data in redux you dont want to make api call again and agin.
+to do that check the store in your body.
+
+  const userData = useSelector((store) => store.user);
+  get the user data.
+  if user data is not present then only make the api call.
+  const fetchUser = async () => {
+    //update the store
+    if(userData) return;
+    try{
+
+so summary:
+-- you should not be able to access other routes without login.
+-- it token is not present redirect user to login page.
