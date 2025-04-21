@@ -331,3 +331,93 @@ export const BASE_URL = "http://localhost:7777";
 ### Remember JSX vs HTML
 - When working with React, always use JSX syntax, not HTML
 - Component names should be PascalCase (e.g., NavBar, not navbar)
+
+
+LOGOUT API:
+this will clear your cookies.
+also when you logout you need to logout and redirect you to login page.
+
+const NavBar = () => {
+  const user = useSelector((store)=> store.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = async() => {
+    try {
+      await axios.post(
+        BASE_URL + "/logout",
+        {},
+        {withCredentials : true}
+      );
+    dispatch(removeUser());    
+    }catch(err){
+      
+    }
+  };
+
+  how to clear data from redux?
+  you have to dispatch an action of remove user. you had created that dispatch in userSlice.js.
+  so ass soon as your redux store will be cleared you will be loggedout.
+
+  here is the below code:
+  const NavBar = () => {
+  const user = useSelector((store)=> store.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async() => {
+    try {
+      await axios.post(
+        BASE_URL + "/logout",
+        {},
+        {withCredentials : true}
+      );
+    dispatch(removeUser());   
+    return navigate("/login"); 
+    }catch(err){
+      
+    }
+  };
+
+
+
+  return (
+          <div className="navbar bg-base-300">
+      <div className="flex-1">
+      <Link to ="/" className="btn btn-ghost text-xl flex items-center gap-2">
+                <img src={logodevtinder} alt="DevTinder Logo" className="w-35 h-11" />
+              
+      </Link>
+      </div>
+      {user && (
+      <div className="flex-none gap-2">
+        <div className="form-control">👾 Connected: {user.firstName}
+        </div>
+        <div className="dropdown dropdown-end mx-5 flex">
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+            <div className="w-10 rounded-full">
+              <img
+                alt="user photo"
+                src={user.photoUrl} />
+            </div>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+            <li>
+              <Link to="/profile" className="justify-between">
+                Profile
+                <span className="badge">New</span>
+              </Link>
+            </li>
+            <li><a>Settings</a></li>
+            <li><a onClick={handleLogout}>Logout</a></li>
+          </ul>
+        </div>
+      </div>
+      )}
+    </div>
+    
+  );
+};
+
+now add validations and error msgs for handling cases like if email or pw is wrong.
