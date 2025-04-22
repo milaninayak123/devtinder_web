@@ -32,4 +32,6 @@ Body
 -- you should not be able to access other routes without login.
 -- it token is not present redirect user to login page.
 -- logout
--- profile
+-- feed feature
+-- build the usercard in feed.
+ 

@@ -421,3 +421,67 @@ const NavBar = () => {
 };
 
 now add validations and error msgs for handling cases like if email or pw is wrong.
+
+FEED FEATURE:
+in the feed profile we have to make an api call to get the feed.
+get the feed by getting response.
+add the feed to store.
+you will need a feedSlice in utils folder to store the feed.
+write the code for it , writeb reducers then export it.
+
+then add your feedreducer to appStore.
+then in feed.jsx dispatch action to get the feed.
+we will dispatch an addfeed action which will have our res.data.
+once you have added your feed to the store you can read the feed as well. by useselector.
+useselector gives you access to the store.
+also if feed is already present just return and if feed is null then getFeed().
+call the useEffect func so that as soon as the page loads you will get the getFeed() page.
+
+now that feed page is prepared , prepare cards.
+for that create a file in components i.e UserCard.jsx.
+inside that do rafce and then add the code of a card you got from daisy ui like this:
+import React from 'react'
+
+const UserCard = () => {
+  return (
+    <div className="card bg-base-100 w-96 shadow-xl">
+  <figure>
+    <img
+      src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+      alt="Shoes" />
+  </figure>
+  <div className="card-body">
+    <h2 className="card-title">Shoes!</h2>
+    <p>If a dog chews shoes whose shoes does he choose?</p>
+    <div className="card-actions justify-end">
+      <button className="btn btn-primary">Buy Now</button>
+    </div>
+  </div>
+</div>
+  )
+}
+
+export default UserCard
+
+after this import this in your feed file.
+
+  useEffect(()=>{
+    getFeed();
+
+  },[]);
+  return (
+    <div className="flex justify-center my-10">
+      <UserCard/>
+    </div>
+  )
+} like this.
+
+return (
+    feed && (
+    <div className="flex justify-center my-10">
+      <UserCard user={feed[0]}/>
+    </div>
+    )
+  );
+}
+it means when my feed is present then only load the cards else dont.
