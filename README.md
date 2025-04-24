@@ -33,5 +33,6 @@ Body
 -- it token is not present redirect user to login page.
 -- logout
 -- feed feature
+-- get the feed and add the feed in the store
 -- build the usercard in feed.
  

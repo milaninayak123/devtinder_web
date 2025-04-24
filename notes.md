@@ -485,3 +485,168 @@ return (
   );
 }
 it means when my feed is present then only load the cards else dont.
+
+
+now edit profile.
+//it will show profile and edit profile
+
+import { useSelector } from "react-redux"
+import EditProfile from "./EditProfile"
+
+const Profile = () => {
+  const user = useSelector((store)=>store.user);
+  return (
+    user && (
+    <div><EditProfile user= {user} /></div>
+  )
+);
+}
+
+export default Profile
+  const user = useSelector((store)=>store.user);
+  add this line to prefill your form with current data of user profile.
+  this is done in profile.jsx
+  in editProfile.jsx do this:
+  import React from 'react'
+import { useState } from 'react';
+const EditProfile = ({user}) => {
+      const [firstName , setFirstName] = useState(user.firstName);
+      const [lastName , setLastName] = useState("");
+      const [age , setAge] = useState("");
+      const [gender , setgender ] = useState("");
+      const [ about, setAbout] = useState("");
+      const [photoUrl , setPhotoUrl] = useState("");
+
+      const [error , setError] = useState("");
+  return (
+    <div className='flex justify-center my-10'>
+    <div className="card bg-base-300 w-96 shadow-xl">
+<div className="card-body">
+  <h2 className="card-title justify-center">Edit Profile</h2>
+  <div>
+  <label className="form-control w-full max-w-xs my-2">
+<div className="label">
+  <span className="label-text">First Name</span>
+</div>
+<input 
+type="text"
+value={firstName}
+placeholder="" className="input input-bordered w-full max-w-xs"
+onChange={(e)=>setFirstName(e.target.value)}
+/>
+</label>
+
+<label className="form-control w-full max-w-xs my-2">
+<div className="label">
+  <span className="label-text">Last Name</span>
+</div>
+<input 
+type="text"
+value={lastName}
+placeholder="" className="input input-bordered w-full max-w-xs"
+onChange={(e)=>setlastName(e.target.value)}
+/>
+</label>
+
+<label className="form-control w-full max-w-xs my-2">
+<div className="label">
+  <span className="label-text">Age</span>
+</div>
+<input 
+type="text"
+value={age}
+placeholder="" className="input input-bordered w-full max-w-xs"
+onChange={(e)=>setAge(e.target.value)}
+/>
+</label>
+
+<label className="form-control w-full max-w-xs my-2">
+<div className="label">
+  <span className="label-text">Gender</span>
+</div>
+<input 
+type="text"
+value={gender}
+placeholder="" className="input input-bordered w-full max-w-xs"
+onChange={(e)=>setgender(e.target.value)}
+/>
+</label>
+
+<label className="form-control w-full max-w-xs my-2">
+<div className="label">
+  <span className="label-text">Bio</span>
+</div>
+<input 
+type="text"
+value={about}
+placeholder="" className="input input-bordered w-full max-w-xs"
+onChange={(e)=>setAbout(e.target.value)}
+/>
+</label>
+
+<label className="form-control w-full max-w-xs my-2">
+<div className="label">
+  <span className="label-text">Edit Picture</span>
+</div>
+<input 
+type="text"
+value={photoUrl}
+placeholder="" className="input input-bordered w-full max-w-xs"
+onChange={(e)=>setPhotoUrl(e.target.value)}
+/>
+</label>
+
+  </div>
+  
+  <p className="text-red-500">{error}</p>
+  <div className="card-actions justify-center m-2">
+    <button className="btn btn-primary">Save Profile</button>
+    
+  </div>
+</div>
+</div>
+</div>
+  )
+}
+
+export default EditProfile
+
+HOW TO SAVE YOUR DATA:
+
+      const saveProfile = async() => {
+        try{
+            const res = await axios.patch(BASE_URL + "profile/edit", {firstName , lastName , photoUrl , age , gender , about },
+                {withCredentials:true}
+            );
+        }catch(err){
+            setError(err.message);
+        }
+      }
+
+check below:
+const EditProfile = ({user}) => {
+      const [firstName , setFirstName] = useState(user.firstName);
+      const [lastName , setLastName] = useState(user.lastName);
+      const [age , setAge] = useState(user.age);
+      const [gender , setgender ] = useState(user.gender);
+      const [ about, setAbout] = useState(user.about);
+      const [photoUrl , setPhotoUrl] = useState(user.photoUrl);
+      const [error , setError] = useState("");
+      const dispatch = useDispatch();
+
+      const saveProfile = async() => {
+        try{
+            const res = await axios.patch(BASE_URL + "/profile/edit", {firstName , lastName , photoUrl , age , gender , about },
+                {withCredentials:true}
+            );
+            dispatch(addUser(res?.data?.data))
+        }catch(err){
+            setError(err.message);
+        }
+      }
+dispatch(addUser(res?.data?.data))
+by this store will be updated.
+
+
+about-text area
+gender - dropdown
