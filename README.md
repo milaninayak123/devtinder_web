@@ -39,4 +39,9 @@ Body
 -- show toast msg on save of profile
 -- see all my connections
 -- new page : see all my connection requests
-\
+-- feature: accept/reject requests
+-- after reviewing the status , it will disappear from the request page.
+-Send/ignore usercard from feed
+Remaining:
+-Signup 
+-E2E testing
