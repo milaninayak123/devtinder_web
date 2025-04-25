@@ -650,3 +650,41 @@ by this store will be updated.
 
 about-text area
 gender - dropdown
+
+ep 18
+1. 2 features: interested and ignore
+interested means sending a connection request to someone.
+2. see my connection requests.
+3. see my connections.
+
+HOW TO CONNECT FRONTEND WITH BACKEND:
+FOR E.G CONNECTIONS API:
+const Connections = () => {
+    //make an api call to fetch the data
+    //it will make an api call to our backened 
+    //keep a try catch block to handle errors
+
+    const fetchConnections = async() => {
+        try{
+            //make an api call
+            const res = await axios.get(BASE_URL+ "/user/connections" , {
+                withCredentials: true,
+            });
+            console.log(res);
+        }catch(err){
+
+        }
+    }
+  return (
+    <div>
+
+    </div>
+  )
+}
+
+export default Connections
+
+REMEMBER THIS syntax:
+  useEffect(()=>{
+
+    } , [])

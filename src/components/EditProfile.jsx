@@ -30,15 +30,15 @@ const EditProfile = ({ user }) => {
         setShowToast(false);
       }, 3000);
     } catch (err) {
-      setError(err.response.data);
+      setError(err.response?.data || "Something went wrong.");
     }
   };
 
   return (
     <>
-      <div className="flex justify-center items-start gap-6 px-4 pt-10 pb-6 min-h-screen box-border overflow-hidden">
+      <div className="flex justify-center items-start gap-6 px-4 pt-10 pb-6 h-screen overflow-hidden box-border">
         {/* Edit Profile Card */}
-        <div className="bg-base-300 w-80 shadow-xl rounded-xl h-[calc(100vh-180px)] flex flex-col overflow-hidden">
+        <div className="bg-base-300 w-80 shadow-xl rounded-xl h-[calc(100vh-160px)] flex flex-col overflow-hidden">
           <div className="p-4 overflow-y-auto flex-1">
             <h2 className="card-title justify-center text-base mb-2">Edit Profile</h2>
 
@@ -61,13 +61,18 @@ const EditProfile = ({ user }) => {
                 />
               </label>
             ))}
-            
+
             {/* Bio textarea */}
             <label className="form-control w-full mb-2">
               <div className="label">
                 <span className="label-text text-sm">Bio</span>
               </div>
-              <textarea className="textarea textarea-bordered" placeholder="Bio"></textarea>
+              <textarea
+                className="textarea textarea-bordered"
+                placeholder="Bio"
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+              ></textarea>
             </label>
 
             {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
@@ -82,7 +87,7 @@ const EditProfile = ({ user }) => {
         </div>
 
         {/* User Card: Same fixed height */}
-        <div className="h-[calc(100vh-120px)]">
+        <div className="h-[calc(100vh-160px)]">
           <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} />
         </div>
       </div>

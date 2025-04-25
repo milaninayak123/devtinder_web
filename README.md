@@ -35,4 +35,7 @@ Body
 -- feed feature
 -- get the feed and add the feed in the store
 -- build the usercard in feed.
- 
+-- edit profile feature
+-- show toast msg on save of profile
+-- see all my connections
+-- 

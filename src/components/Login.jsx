@@ -7,8 +7,8 @@ import { BASE_URL } from '../utils/constants';
 
 const Login = () => {
   //state variables
-  const [email , setEmailId] = useState("elon@gmail.com");
-  const [password , setPassword] = useState("Elon@123");
+  const [email , setEmailId] = useState("arvind@gmail.com");
+  const [password , setPassword] = useState("Arvind@123");
   const [error , setError] = useState("");
   const dispatch = useDispatch();
   //call the hook
