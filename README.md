@@ -38,4 +38,5 @@ Body
 -- edit profile feature
 -- show toast msg on save of profile
 -- see all my connections
--- 
+-- new page : see all my connection requests
+\
