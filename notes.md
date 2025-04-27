@@ -688,3 +688,7 @@ REMEMBER THIS syntax:
   useEffect(()=>{
 
     } , [])
+  
+
+Creating SIGNUP:
+use the same page for login and signup.

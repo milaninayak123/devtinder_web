@@ -8,10 +8,10 @@ import { BASE_URL } from '../utils/constants';
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
-  const [age, setAge] = useState(user.age);
-  const [gender, setgender] = useState(user.gender);
-  const [about, setAbout] = useState(user.about);
-  const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
+  const [age, setAge] = useState(user.age || "");
+  const [gender, setGender] = useState(user.gender || "");
+  const [about, setAbout] = useState(user.about || "");
+  const [photoUrl, setPhotoUrl] = useState(user.photoUrl );
   const [error, setError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const dispatch = useDispatch();
@@ -42,33 +42,74 @@ const EditProfile = ({ user }) => {
           <div className="p-4 overflow-y-auto flex-1">
             <h2 className="card-title justify-center text-base mb-2">Edit Profile</h2>
 
-            {[
-              { label: 'First Name', value: firstName, setter: setFirstName },
-              { label: 'Last Name', value: lastName, setter: setLastName },
-              { label: 'Age', value: age, setter: setAge },
-              { label: 'Gender', value: gender, setter: setgender },
-              { label: 'Edit Picture', value: photoUrl, setter: setPhotoUrl },
-            ].map(({ label, value, setter }, index) => (
-              <label key={index} className="form-control w-full mb-2">
-                <div className="label">
-                  <span className="label-text text-sm">{label}</span>
-                </div>
-                <input
-                  type="text"
-                  value={value}
-                  className="input input-bordered input-sm w-full"
-                  onChange={(e) => setter(e.target.value)}
-                />
-              </label>
-            ))}
-
-            {/* Bio textarea */}
-            <label className="form-control w-full mb-2">
+            {/* Form */}
+            <label className="form-control w-full max-w-xs my-2">
               <div className="label">
-                <span className="label-text text-sm">Bio</span>
+                <span className="label-text">First Name</span>
+              </div>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="input input-bordered input-sm w-full max-w-xs"
+              />
+            </label>
+
+            <label className="form-control w-full max-w-xs my-2">
+              <div className="label">
+                <span className="label-text">Last Name</span>
+              </div>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="input input-bordered input-sm w-full max-w-xs"
+              />
+            </label>
+
+            <label className="form-control w-full max-w-xs my-2">
+              <div className="label">
+                <span className="label-text">Age</span>
+              </div>
+              <input
+                type="text"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="input input-bordered input-sm w-full max-w-xs"
+              />
+            </label>
+
+            <label className="form-control w-full max-w-xs my-2">
+              <div className="label">
+                <span className="label-text">Gender</span>
+              </div>
+              <input
+                type="text"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="input input-bordered input-sm w-full max-w-xs"
+              />
+            </label>
+
+            <label className="form-control w-full max-w-xs my-2">
+              <div className="label">
+                <span className="label-text">Edit Picture (Photo URL)</span>
+              </div>
+              <input
+                type="text"
+                value={photoUrl}
+                onChange={(e) => setPhotoUrl(e.target.value)}
+                className="input input-bordered input-sm w-full max-w-xs"
+              />
+            </label>
+
+            {/* About/Bio textarea */}
+            <label className="form-control w-full max-w-xs my-2">
+              <div className="label">
+                <span className="label-text">Bio</span>
               </div>
               <textarea
-                className="textarea textarea-bordered"
+                className="textarea textarea-bordered w-full max-w-xs"
                 placeholder="Bio"
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
@@ -78,7 +119,7 @@ const EditProfile = ({ user }) => {
             {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
           </div>
 
-          {/* Save button fixed inside the card */}
+          {/* Save button */}
           <div className="p-3 border-t border-base-100">
             <button className="btn btn-primary btn-sm w-full" onClick={saveProfile}>
               Save
@@ -86,7 +127,7 @@ const EditProfile = ({ user }) => {
           </div>
         </div>
 
-        {/* User Card: Same fixed height */}
+        {/* User Card */}
         <div className="h-[calc(100vh-160px)]">
           <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} />
         </div>
